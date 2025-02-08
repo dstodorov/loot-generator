@@ -1,9 +1,6 @@
 package com.dst.lootgenerator.controllers;
 
-import com.dst.lootgenerator.models.DTO.LoginRequest;
-import com.dst.lootgenerator.models.DTO.LoginResponse;
-import com.dst.lootgenerator.models.DTO.RegisterRequest;
-import com.dst.lootgenerator.models.DTO.RegisterResponse;
+import com.dst.lootgenerator.models.DTO.*;
 import com.dst.lootgenerator.models.User;
 import com.dst.lootgenerator.services.AuthService;
 import jakarta.validation.Valid;
@@ -41,4 +38,16 @@ public class AuthController {
         LoginResponse loginResponse = authService.login(loginRequest);
         return ResponseEntity.ok(loginResponse);
     }
+
+//    @PostMapping("/forgot-password")
+//    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+//        authService.forgotPassword(forgotPasswordRequest.getEmail());
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @PostMapping("/reset-password")
+//    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+//        authService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getNewPassword());
+//        return ResponseEntity.ok().build();
+//    }
 }

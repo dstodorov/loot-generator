@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/LootGeneratorDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
-    password: Chupqrebra87
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -11,6 +11,21 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+  mail:
+    host: your.smtp.host
+    port: 123
+    username: your.smtp.username
+    password: your.smtp.password
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 3000
 application:
   security:
     jwt:
