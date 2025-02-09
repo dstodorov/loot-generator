@@ -8,4 +8,6 @@ import com.dst.lootgenerator.models.User;
 public interface AuthService {
     User register(RegisterRequest registerRequest);
     LoginResponse login(LoginRequest loginRequest);
+    void forgotPassword(String email);
+    void resetPassword(String token, String newPassword);
 }

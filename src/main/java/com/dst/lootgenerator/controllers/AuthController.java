@@ -4,7 +4,9 @@ import com.dst.lootgenerator.models.DTO.*;
 import com.dst.lootgenerator.models.User;
 import com.dst.lootgenerator.services.AuthService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,15 +41,30 @@ public class AuthController {
         return ResponseEntity.ok(loginResponse);
     }
 
-//    @PostMapping("/forgot-password")
-//    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
-//        authService.forgotPassword(forgotPasswordRequest.getEmail());
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @PostMapping("/reset-password")
-//    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
-//        authService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getNewPassword());
-//        return ResponseEntity.ok().build();
-//    }
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        try {
+            authService.forgotPassword(forgotPasswordRequest.getEmail());
+            return ResponseEntity.ok().build(); // Връщаме 200 OK при успешен request.
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); //Връщаме 404 Not Found ако потребителя не е намерен.
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //Връщаме 500 Internal Server Error при други грешки.
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        try {
+            authService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getNewPassword());
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("Invalid or expired token")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token"); //400
+            } else if (e.getMessage().equals("Token expired")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token expired");//400
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //500
+        }
+    }
 }

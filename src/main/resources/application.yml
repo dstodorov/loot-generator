@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/LootGeneratorDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
-    password:
+    password: Chupqrebra87
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -12,10 +12,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
   mail:
-    host: your.smtp.host
-    port: 123
-    username: your.smtp.username
-    password: your.smtp.password
+    host: smtp.sendgrid.net
+    port: 587
+    username: apikey
+    password: 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
     protocol: smtp
     properties:
       mail:
