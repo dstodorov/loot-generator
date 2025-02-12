@@ -7,12 +7,14 @@ import com.dst.lootgenerator.models.Role;
 import com.dst.lootgenerator.models.User;
 import com.dst.lootgenerator.repositories.UserRepository;
 import com.dst.lootgenerator.security.JwtService;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,13 +36,15 @@ public class AuthServiceImpl implements AuthService {
 
     private final JwtService jwtService;
     private final EmailService emailService;
+    private final UserDetailsService userDetailsService;
 
-    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, EmailService emailService) {
+    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, EmailService emailService, UserDetailsService userDetailsService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.emailService = emailService;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -94,5 +98,28 @@ public class AuthServiceImpl implements AuthService {
         user.setResetPasswordToken(null);
         user.setResetPasswordTokenExpiryDate(null);
         userRepository.save(user);
+    }
+
+    @Override
+    public LoginResponse refreshToken(String refreshToken) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw new IllegalArgumentException("Refresh token is required");
+        }
+
+        if (!jwtService.isTokenValid(refreshToken)) { //Използваме isTokenValid, като подаваме null за UserDetails, защото вече сме го извлекли.
+            throw new JwtException("Invalid refresh token");
+        }
+
+        String username = jwtService.extractUsername(refreshToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        if (userDetails == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        String accessToken = jwtService.generateToken(userDetails);
+        String newRefreshToken = jwtService.generateRefreshToken(userDetails);
+
+        return new LoginResponse(accessToken, newRefreshToken);
     }
 }

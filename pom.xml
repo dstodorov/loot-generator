@@ -97,6 +97,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>lootgenerator</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

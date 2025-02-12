@@ -3,6 +3,8 @@ package com.dst.lootgenerator.controllers;
 import com.dst.lootgenerator.models.DTO.*;
 import com.dst.lootgenerator.models.User;
 import com.dst.lootgenerator.services.AuthService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +67,20 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token expired");//400
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //500
+        }
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        try {
+            LoginResponse loginResponse = authService.refreshToken(refreshTokenRequest.getRefreshToken());
+            return ResponseEntity.ok(loginResponse);
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token expired"); // 401
+        } catch (JwtException | IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid refresh token"); // 400
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500
         }
     }
 }

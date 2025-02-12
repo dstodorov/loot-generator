@@ -30,15 +30,14 @@ public class SecurityConfig {
         this.authenticationConfiguration = authenticationConfiguration;
     }
 
+    private static final String[] whiteList = {"/api/auth/register", "/api/auth/login", "/api/auth/forgot-password", "/api/auth/reset-password", "/api/auth/refresh-token"};
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/api/auth/forgot-password").permitAll()
-                        .requestMatchers("/api/auth/reset-password").permitAll()
+                        .requestMatchers(whiteList).permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
@@ -48,7 +47,8 @@ public class SecurityConfig {
                         .logoutSuccessHandler((request, response, authentication) -> {
                             // Допълнителна логика при успешен изход (например, изтриване на refresh токена от базата данни)
                         })
-                );;
+                );
+        ;
         return http.build();
     }
 

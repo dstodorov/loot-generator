@@ -18,7 +18,7 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText("Click the link below to reset your password:\n\n" +
-                "https://codesharing.org/reset-password?token=" + token);
+                "https://codesharing.org/lootgenerator/api/auth/reset-password?token=" + token);
         message.setFrom("support@codesharing.org"); // Добавете "From" header с верифициран имейл от SendGrid
 
         mailSender.send(message);
