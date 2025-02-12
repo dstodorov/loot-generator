@@ -1,4 +1,4 @@
-package com.dst.lootgenerator.config;
+package com.dst.lootgenerator.core.config;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

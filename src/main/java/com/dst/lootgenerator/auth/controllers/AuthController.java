@@ -1,8 +1,8 @@
-package com.dst.lootgenerator.controllers;
+package com.dst.lootgenerator.auth.controllers;
 
-import com.dst.lootgenerator.models.DTO.*;
-import com.dst.lootgenerator.models.User;
-import com.dst.lootgenerator.services.AuthService;
+import com.dst.lootgenerator.auth.models.DTO.*;
+import com.dst.lootgenerator.auth.models.User;
+import com.dst.lootgenerator.auth.services.AuthService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.validation.Valid;

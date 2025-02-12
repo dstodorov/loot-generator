@@ -1,9 +1,9 @@
-package com.dst.lootgenerator.services;
+package com.dst.lootgenerator.auth.services;
 
-import com.dst.lootgenerator.models.DTO.LoginRequest;
-import com.dst.lootgenerator.models.DTO.LoginResponse;
-import com.dst.lootgenerator.models.DTO.RegisterRequest;
-import com.dst.lootgenerator.models.User;
+import com.dst.lootgenerator.auth.models.DTO.LoginRequest;
+import com.dst.lootgenerator.auth.models.DTO.LoginResponse;
+import com.dst.lootgenerator.auth.models.DTO.RegisterRequest;
+import com.dst.lootgenerator.auth.models.User;
 
 public interface AuthService {
     User register(RegisterRequest registerRequest);

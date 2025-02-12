@@ -1,6 +1,6 @@
-package com.dst.lootgenerator.repositories;
+package com.dst.lootgenerator.auth.repositories;
 
-import com.dst.lootgenerator.models.User;
+import com.dst.lootgenerator.auth.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

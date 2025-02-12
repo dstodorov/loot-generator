@@ -1,4 +1,4 @@
-package com.dst.lootgenerator.security;
+package com.dst.lootgenerator.core.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;

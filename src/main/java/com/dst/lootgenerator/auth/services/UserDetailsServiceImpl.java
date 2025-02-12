@@ -1,9 +1,8 @@
-package com.dst.lootgenerator.services;
+package com.dst.lootgenerator.auth.services;
 
-import com.dst.lootgenerator.models.Role;
-import com.dst.lootgenerator.models.User;
-import com.dst.lootgenerator.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dst.lootgenerator.auth.models.Role;
+import com.dst.lootgenerator.auth.models.User;
+import com.dst.lootgenerator.auth.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

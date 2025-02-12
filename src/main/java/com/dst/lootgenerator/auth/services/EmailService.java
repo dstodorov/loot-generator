@@ -1,4 +1,4 @@
-package com.dst.lootgenerator.services;
+package com.dst.lootgenerator.auth.services;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

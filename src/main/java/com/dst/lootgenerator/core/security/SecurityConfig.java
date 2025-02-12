@@ -1,4 +1,4 @@
-package com.dst.lootgenerator.security;
+package com.dst.lootgenerator.core.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

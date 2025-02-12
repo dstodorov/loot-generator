@@ -1,4 +1,4 @@
-package com.dst.lootgenerator.models;
+package com.dst.lootgenerator.auth.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

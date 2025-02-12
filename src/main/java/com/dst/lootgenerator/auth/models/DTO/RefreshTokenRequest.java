@@ -1,4 +1,4 @@
-package com.dst.lootgenerator.models.DTO;
+package com.dst.lootgenerator.auth.models.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginResponse {
-    private String accessToken;
+public class RefreshTokenRequest {
     private String refreshToken;
 }

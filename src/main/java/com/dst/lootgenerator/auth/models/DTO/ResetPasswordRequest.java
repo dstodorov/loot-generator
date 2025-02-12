@@ -1,4 +1,4 @@
-package com.dst.lootgenerator.models.DTO;
+package com.dst.lootgenerator.auth.models.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ForgotPasswordRequest {
-    private String email;
-
+public class ResetPasswordRequest {
+    private String token;
+    private String newPassword;
 }

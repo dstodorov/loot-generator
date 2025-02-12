@@ -1,14 +1,13 @@
-package com.dst.lootgenerator.services;
+package com.dst.lootgenerator.auth.services;
 
-import com.dst.lootgenerator.models.DTO.LoginRequest;
-import com.dst.lootgenerator.models.DTO.LoginResponse;
-import com.dst.lootgenerator.models.DTO.RegisterRequest;
-import com.dst.lootgenerator.models.Role;
-import com.dst.lootgenerator.models.User;
-import com.dst.lootgenerator.repositories.UserRepository;
-import com.dst.lootgenerator.security.JwtService;
+import com.dst.lootgenerator.auth.models.DTO.LoginRequest;
+import com.dst.lootgenerator.auth.models.DTO.LoginResponse;
+import com.dst.lootgenerator.auth.models.DTO.RegisterRequest;
+import com.dst.lootgenerator.auth.models.Role;
+import com.dst.lootgenerator.auth.models.User;
+import com.dst.lootgenerator.auth.repositories.UserRepository;
+import com.dst.lootgenerator.core.security.JwtService;
 import io.jsonwebtoken.JwtException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

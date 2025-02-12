@@ -1,6 +1,6 @@
-package com.dst.lootgenerator.models.DTO;
+package com.dst.lootgenerator.auth.models.DTO;
 
-import com.dst.lootgenerator.models.Role;
+import com.dst.lootgenerator.auth.models.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
