@@ -7,7 +7,11 @@ import com.dst.lootgenerator.auth.models.Role;
 import com.dst.lootgenerator.auth.models.User;
 import com.dst.lootgenerator.auth.repositories.UserRepository;
 import com.dst.lootgenerator.core.security.JwtService;
+import com.dst.lootgenerator.logger.models.ActionType;
+import com.dst.lootgenerator.logger.models.LogData;
+import com.dst.lootgenerator.logger.services.LoggerService;
 import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,14 +41,16 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final EmailService emailService;
     private final UserDetailsService userDetailsService;
+    private final LoggerService loggerService;
 
-    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, EmailService emailService, UserDetailsService userDetailsService) {
+    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, EmailService emailService, UserDetailsService userDetailsService, LoggerService loggerService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.emailService = emailService;
         this.userDetailsService = userDetailsService;
+        this.loggerService = loggerService;
     }
 
     @Override
@@ -56,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest, HttpServletRequest requestData) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -69,6 +76,17 @@ public class AuthServiceImpl implements AuthService {
 
         String accessToken = jwtService.generateToken(userDetails);
         String refreshToken = jwtService.generateRefreshToken(userDetails);
+
+        Enumeration<String> headerNames = requestData.getHeaderNames();
+        LogData logData = LogData
+                .builder()
+                .user(userDetails.getUsername())
+                .action(ActionType.LOGIN)
+                .ipAddress(requestData.getRemoteAddr())
+                .deviceType(requestData.getHeader("User-Agent"))
+                .build();
+
+        loggerService.log(logData);
 
         return new LoginResponse(accessToken, refreshToken);
     }

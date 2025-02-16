@@ -5,6 +5,7 @@ import com.dst.lootgenerator.auth.models.User;
 import com.dst.lootgenerator.auth.services.AuthService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +39,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
-        LoginResponse loginResponse = authService.login(loginRequest);
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest requestData) {
+        LoginResponse loginResponse = authService.login(loginRequest, requestData);
         return ResponseEntity.ok(loginResponse);
     }
 
