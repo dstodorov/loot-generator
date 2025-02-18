@@ -1,5 +1,6 @@
 package com.dst.lootgenerator.core.security;
 
+import com.dst.lootgenerator.admin.service.GameConfigService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -17,12 +18,18 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    @Value("${application.security.jwt.expiration}")
+    private final GameConfigService gameConfigService;
+    //@Value("${application.security.jwt.expiration}")
     private long jwtExpiration;
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
-    @Value("${application.security.jwt.refresh-token.expiration}")
+    //@Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
+
+    public JwtService(GameConfigService gameConfigService) {
+        this.gameConfigService = gameConfigService;
+    }
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -37,12 +44,14 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        jwtExpiration = this.gameConfigService.getGameConfig().getAccessTokenExpireDuration();
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
     public String generateRefreshToken(
             UserDetails userDetails
     ) {
+        refreshExpiration = this.gameConfigService.getGameConfig().getRefreshTokenExpireDuration();
         return buildToken(new HashMap<>(), userDetails, refreshExpiration);
     }
 
