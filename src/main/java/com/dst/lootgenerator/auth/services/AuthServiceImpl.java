@@ -4,14 +4,20 @@ import com.dst.lootgenerator.auth.models.DTO.LoginRequest;
 import com.dst.lootgenerator.auth.models.DTO.LoginResponse;
 import com.dst.lootgenerator.auth.models.DTO.RegisterRequest;
 import com.dst.lootgenerator.auth.models.Role;
+import com.dst.lootgenerator.auth.models.Token;
+import com.dst.lootgenerator.auth.models.TokenType;
 import com.dst.lootgenerator.auth.models.User;
+import com.dst.lootgenerator.auth.repositories.TokenRepository;
 import com.dst.lootgenerator.auth.repositories.UserRepository;
 import com.dst.lootgenerator.core.security.JwtService;
 import com.dst.lootgenerator.logger.models.ActionType;
 import com.dst.lootgenerator.logger.models.LogData;
 import com.dst.lootgenerator.logger.services.LoggerService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +28,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -42,8 +49,9 @@ public class AuthServiceImpl implements AuthService {
     private final EmailService emailService;
     private final UserDetailsService userDetailsService;
     private final LoggerService loggerService;
+    private final TokenRepository tokenRepository;
 
-    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, EmailService emailService, UserDetailsService userDetailsService, LoggerService loggerService) {
+    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, EmailService emailService, UserDetailsService userDetailsService, LoggerService loggerService, TokenRepository tokenRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
@@ -51,6 +59,7 @@ public class AuthServiceImpl implements AuthService {
         this.emailService = emailService;
         this.userDetailsService = userDetailsService;
         this.loggerService = loggerService;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -70,12 +79,15 @@ public class AuthServiceImpl implements AuthService {
                         loginRequest.getPassword()
                 )
         );
+        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         String accessToken = jwtService.generateToken(userDetails);
         String refreshToken = jwtService.generateRefreshToken(userDetails);
+        revokeAllUserTokens(user);
+        saveUserToken(user, accessToken);
 
         Enumeration<String> headerNames = requestData.getHeaderNames();
         LogData logData = LogData
@@ -117,26 +129,52 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
     }
 
+    private void saveUserToken(User user, String jwtToken) {
+        Token token = new Token(0, jwtToken, TokenType.BEARER, false, false, user);
+        tokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(User user) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty()) {
+            return;
+        }
+
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+
+        tokenRepository.saveAll(validUserTokens);
+    }
+
     @Override
-    public LoginResponse refreshToken(String refreshToken) {
-        if (refreshToken == null || refreshToken.isEmpty()) {
-            throw new IllegalArgumentException("Refresh token is required");
+    public void refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws IOException {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String refreshToken;
+        final String username;
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            //throw new RefreshTokenFailureException(ApplicationMessages.REFRESH_TOKEN_FAILURE);
         }
+        refreshToken = authHeader.substring(7);
+        username = jwtService.extractUsername(refreshToken);
+        if (username != null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            User user = this.userRepository.findByEmail(username)
+                    .orElseThrow();
 
-        if (!jwtService.isTokenValid(refreshToken)) { //Използваме isTokenValid, като подаваме null за UserDetails, защото вече сме го извлекли.
-            throw new JwtException("Invalid refresh token");
+            if (jwtService.isTokenValid(refreshToken, userDetails)) {
+                String accessToken = jwtService.generateToken(userDetails);
+                revokeAllUserTokens(user);
+                saveUserToken(user, accessToken);
+                LoginResponse loginResponse = new LoginResponse(accessToken, refreshToken);
+
+                new ObjectMapper().writeValue(response.getOutputStream(), loginResponse);
+            }
         }
-
-        String username = jwtService.extractUsername(refreshToken);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-        if (userDetails == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        String accessToken = jwtService.generateToken(userDetails);
-        String newRefreshToken = jwtService.generateRefreshToken(userDetails);
-
-        return new LoginResponse(accessToken, newRefreshToken);
     }
 }
