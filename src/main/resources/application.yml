@@ -33,6 +33,24 @@ application:
       expiration: 86400000 # 1 day
       refresh-token:
         expiration: 604800000 # 7 days
+api:
+  info:
+    security:
+      scheme:
+        name: "bearerAuth"
+        type: "bearer"
+        format: "JWT"
+    title: "Restaurant Manager API"
+    contact:
+      name: "Dimitar Todorov"
+      email: "d.todorov.vn@gmail.com"
+    description: "This API is made to be consumed by Web and Mobile front-end applications"
+    version: "v0.1"
+springdoc:
+  swagger-ui:
+    path: /api-docs/swagger.html
+  api-docs:
+    path: /api-docs
 logging:
   level:
     org:

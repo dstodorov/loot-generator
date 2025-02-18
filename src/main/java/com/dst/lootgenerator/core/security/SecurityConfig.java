@@ -38,7 +38,15 @@ public class SecurityConfig {
         this.logoutHandler = logoutHandler;
     }
 
-    private static final String[] whiteList = {"/api/auth/register", "/api/auth/login", "/api/auth/forgot-password", "/api/auth/reset-password", "/api/auth/refresh-token"};
+    private static final String[] whiteList = {
+            "/api/auth/register",
+            "/api/auth/login",
+            "/api/auth/forgot-password",
+            "/api/auth/reset-password",
+            "/api/auth/refresh-token",
+            "/api-docs/**",
+            "/swagger-ui/**"
+    };
     public static String LOGOUT_ENDPOINT = "/api/auth/logout";
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
