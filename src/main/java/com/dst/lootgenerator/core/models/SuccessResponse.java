@@ -1,4 +1,12 @@
 package com.dst.lootgenerator.core.models;
 
-public class SuccessResponse {
+import org.springframework.http.HttpStatusCode;
+
+import java.time.Instant;
+
+public record SuccessResponse(
+        Instant timestamp,
+        HttpStatusCode status,
+        Object responseBody
+) {
 }

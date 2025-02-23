@@ -3,17 +3,22 @@ package com.dst.lootgenerator.auth.controllers;
 import com.dst.lootgenerator.auth.models.DTO.*;
 import com.dst.lootgenerator.auth.models.User;
 import com.dst.lootgenerator.auth.services.AuthService;
+import com.dst.lootgenerator.core.models.SuccessResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.time.Instant;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody @Valid RegisterRequest registerRequest) {
+    public ResponseEntity<SuccessResponse> register(@RequestBody @Valid RegisterRequest registerRequest, UriComponentsBuilder uri) {
         User registeredUser = authService.register(registerRequest);
 
         RegisterResponse registerResponse = new RegisterResponse(
@@ -35,13 +40,28 @@ public class AuthController {
                 registeredUser.getRoles()
         );
 
-        return ResponseEntity.ok(registerResponse);
+        SuccessResponse successResponse = new SuccessResponse(
+                Instant.now(),
+                HttpStatus.CREATED,
+                registerResponse
+        );
+
+        UriComponents uriComponents = uri.path("/users/{id}").buildAndExpand(registeredUser.getId());
+
+        return ResponseEntity.created(uriComponents.toUri()).body(successResponse);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest requestData) {
+    public ResponseEntity<SuccessResponse> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest requestData) {
         LoginResponse loginResponse = authService.login(loginRequest, requestData);
-        return ResponseEntity.ok(loginResponse);
+
+        SuccessResponse successResponse = new SuccessResponse(
+                Instant.now(),
+                HttpStatus.CREATED,
+                loginResponse
+        );
+
+        return ResponseEntity.ok(successResponse);
     }
 
     @PostMapping("/forgot-password")

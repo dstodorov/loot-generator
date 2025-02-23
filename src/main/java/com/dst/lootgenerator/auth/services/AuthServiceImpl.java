@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRoles(Set.of(Role.USER)); // По подразбиране, новорегистрираните потребители са USER-и
+        user.setRoles(Set.of(Role.USER));
         return userRepository.save(user);
     }
 
@@ -79,7 +79,9 @@ public class AuthServiceImpl implements AuthService {
                         loginRequest.getPassword()
                 )
         );
-        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+        User user = userRepository
+                .findByEmail(loginRequest.getEmail())
+                .orElseThrow();
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -89,7 +91,6 @@ public class AuthServiceImpl implements AuthService {
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken);
 
-        Enumeration<String> headerNames = requestData.getHeaderNames();
         LogData logData = LogData
                 .builder()
                 .user(userDetails.getUsername())
