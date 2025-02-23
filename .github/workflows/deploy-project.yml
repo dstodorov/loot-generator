@@ -51,4 +51,4 @@ jobs:
         run: |
           curl -v -u $TOMCAT_USER:$TOMCAT_PASSWORD \
           --upload-file *.war \
-          http://$TOMCAT_HOST:$TOMCAT_PORT/manager/text/deploy?path=/your-app-name&update=true
+          https://$TOMCAT_HOST:$TOMCAT_PORT/manager/text/deploy?path=/your-app-name&update=true
