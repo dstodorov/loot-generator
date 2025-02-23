@@ -49,6 +49,6 @@ jobs:
           TOMCAT_HOST: ${{ secrets.TOMCAT_HOST }}
           TOMCAT_PORT: ${{ secrets.TOMCAT_PORT }}
         run: |
-          curl -v -u $TOMCAT_USER:$TOMCAT_PASSWORD \
+          curl -L --tlsv1.2 -v -u $TOMCAT_USER:$TOMCAT_PASSWORD \
           --upload-file *.war \
           https://$TOMCAT_HOST:$TOMCAT_PORT/manager/text/deploy?path=/your-app-name&update=true
