@@ -1,4 +1,4 @@
-name: Deploy to Tomcat (HTTPS)
+name: Deploy to Tomcat (via Nginx - HTTPS)
 
 on:
   push:
