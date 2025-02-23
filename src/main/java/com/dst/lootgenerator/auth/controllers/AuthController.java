@@ -57,7 +57,7 @@ public class AuthController {
 
         SuccessResponse successResponse = new SuccessResponse(
                 Instant.now(),
-                HttpStatus.CREATED,
+                HttpStatus.ACCEPTED,
                 loginResponse
         );
 
