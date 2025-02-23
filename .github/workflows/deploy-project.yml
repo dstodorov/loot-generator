@@ -1,4 +1,4 @@
-name: Deploy to Tomcat (via Nginx - HTTPS)
+name: Deploy to Tomcat (via Nginx - HTTP)
 
 on:
   push:
@@ -22,8 +22,8 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests=true
 
-      - name: Deploy to Tomcat (HTTPS)
+      - name: Deploy to Tomcat (HTTP)
         run: |
-          curl -v -k -u "${{ secrets.TOMCAT_USER }}:${{ secrets.TOMCAT_PASSWORD }}" \
+          curl -v -u "${{ secrets.TOMCAT_USER }}:${{ secrets.TOMCAT_PASSWORD }}" \
           --upload-file target/*.war \
-          "https://${{ secrets.TOMCAT_HOST }}:${{ secrets.TOMCAT_PORT }}/manager/text/deploy?path=/your-app-name"
+          "http://${{ secrets.TOMCAT_HOST }}:${{ secrets.TOMCAT_PORT }}/manager/text/deploy?path=/your-app-name"
