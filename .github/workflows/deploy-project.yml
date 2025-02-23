@@ -37,6 +37,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: spring-boot-app
+      - name: Debug environment variables
+        run: |
+          echo "TOMCAT_HOST=$TOMCAT_HOST"
+          echo "TOMCAT_PORT=$TOMCAT_PORT"
 
       - name: Deploy to remote Tomcat
         env:
