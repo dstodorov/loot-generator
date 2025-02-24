@@ -22,8 +22,11 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests=true
 
-      - name: Deploy to Tomcat (HTTP)
+      - name: Undeploy and Deploy to Tomcat (HTTPS)
         run: |
-          curl -v -u "${{ secrets.TOMCAT_USER }}:${{ secrets.TOMCAT_PASSWORD }}" \
+          curl -v -k -u "${{ secrets.TOMCAT_USER }}:${{ secrets.TOMCAT_PASSWORD }}" \
+          "https://${{ secrets.TOMCAT_HOST }}:${{ secrets.TOMCAT_PORT }}/manager/text/undeploy?path=/lootgenerator"
+      
+          curl -v -k -u "${{ secrets.TOMCAT_USER }}:${{ secrets.TOMCAT_PASSWORD }}" \
           --upload-file target/*.war \
-          "https://${{ secrets.TOMCAT_HOST }}:${{ secrets.TOMCAT_PORT }}/manager/text/deploy?path=/your-app-name"
+          "https://${{ secrets.TOMCAT_HOST }}:${{ secrets.TOMCAT_PORT }}/manager/text/deploy?path=/lootgenerator"
