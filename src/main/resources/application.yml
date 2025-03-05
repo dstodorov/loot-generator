@@ -56,3 +56,5 @@ logging:
     org:
       springframework:
         security: debug
+google:
+  client-id: ${GOOGLE_CLIENT_ID}

@@ -14,9 +14,12 @@ import com.dst.lootgenerator.logger.models.ActionType;
 import com.dst.lootgenerator.logger.models.LogData;
 import com.dst.lootgenerator.logger.services.LoggerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,13 +31,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.google.auth.oauth2.AccessToken;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -50,6 +54,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailsService userDetailsService;
     private final LoggerService loggerService;
     private final TokenRepository tokenRepository;
+
+    @Value("${google.client-id}")
+    private String googleClientId;
 
     public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, EmailService emailService, UserDetailsService userDetailsService, LoggerService loggerService, TokenRepository tokenRepository) {
         this.userRepository = userRepository;
@@ -99,6 +106,47 @@ public class AuthServiceImpl implements AuthService {
                 .deviceType(requestData.getHeader("User-Agent"))
                 .build();
 
+        loggerService.log(logData);
+
+        return new LoginResponse(accessToken, refreshToken);
+    }
+    @Override
+    public LoginResponse googleLogin(String googleToken, HttpServletRequest requestData) throws Exception {
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+                .setAudience(Collections.singletonList(googleClientId))
+                .build();
+
+        GoogleIdToken idToken = verifier.verify(googleToken);
+        if (idToken == null) {
+            throw new Exception("Invalid Google token");
+        }
+
+        GoogleIdToken.Payload payload = idToken.getPayload();
+        String email = payload.getEmail();
+        String name = (String) payload.get("name");
+
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            user = new User();
+            user.setEmail(email);
+            user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+            user.setRoles(Set.of(Role.USER));
+            userRepository.save(user);
+        }
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+        String accessToken = jwtService.generateToken(userDetails);
+        String refreshToken = jwtService.generateRefreshToken(userDetails);
+        revokeAllUserTokens(user);
+        saveUserToken(user, accessToken);
+
+        LogData logData = LogData
+                .builder()
+                .user(userDetails.getUsername())
+                .action(ActionType.LOGIN)
+                .ipAddress(requestData.getRemoteAddr())
+                .deviceType(requestData.getHeader("User-Agent"))
+                .build();
         loggerService.log(logData);
 
         return new LoginResponse(accessToken, refreshToken);

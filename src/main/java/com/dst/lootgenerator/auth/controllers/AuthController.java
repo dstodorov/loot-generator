@@ -64,6 +64,23 @@ public class AuthController {
         return ResponseEntity.ok(successResponse);
     }
 
+    @PostMapping("/google-login")
+    public ResponseEntity<SuccessResponse> googleLogin(@RequestBody String googleToken, HttpServletRequest requestData) {
+        try {
+            LoginResponse loginResponse = authService.googleLogin(googleToken, requestData);
+
+            SuccessResponse successResponse = new SuccessResponse(
+                    Instant.now(),
+                    HttpStatus.OK,
+                    loginResponse
+            );
+
+            return ResponseEntity.ok(successResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         try {

@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.security.Principal;
 import java.time.Instant;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,12 +53,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         //log.error("BadCredentialsException occurred: {}", exception.getMessage(), exception);
         List<String> errors = List.of(exception.getMessage());
         FailureResponse userAuthenticationFailed = new FailureResponse(Instant.now(), "User authentication failed", HttpStatus.UNAUTHORIZED, errors);
-        databaseLogger.logError(userAuthenticationFailed, "");
+        databaseLogger.logError(userAuthenticationFailed, "Anonymous");
         return new ResponseEntity<>(userAuthenticationFailed, HttpStatus.UNAUTHORIZED);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        Principal principal = request.getUserPrincipal();
+        String username = (principal != null) ? principal.getName() : "Anonymous";
 
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
@@ -64,9 +68,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                 .collect(Collectors.toList());
 
-        log.warn("Validation errors: {}", errors);
 
         FailureResponse failureResponse = new FailureResponse(Instant.now(), "Validation failed", HttpStatus.BAD_REQUEST, errors);
+
+        databaseLogger.logError(failureResponse, username);
+
         return new ResponseEntity<>(failureResponse, HttpStatus.BAD_REQUEST);
     }
 }

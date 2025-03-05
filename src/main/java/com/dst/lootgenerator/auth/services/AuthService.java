@@ -14,6 +14,8 @@ public interface AuthService {
 
     LoginResponse login(LoginRequest loginRequest, HttpServletRequest request);
 
+    LoginResponse googleLogin(String googleToken, HttpServletRequest requestData) throws Exception;
+
     void forgotPassword(String email);
 
     void resetPassword(String token, String newPassword);
