@@ -41,6 +41,7 @@ public class SecurityConfig {
     private static final String[] whiteList = {
             "/api/auth/register",
             "/api/auth/login",
+            "/api/auth/test",
             "/api/auth/forgot-password",
             "/api/auth/reset-password",
             "/api/auth/refresh-token",

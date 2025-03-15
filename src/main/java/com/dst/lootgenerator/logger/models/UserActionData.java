@@ -12,7 +12,7 @@ import java.time.Instant;
 @Builder
 @Entity
 @Table(name = "logs_user_actions")
-public class UserAction {
+public class UserActionData implements LogData{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

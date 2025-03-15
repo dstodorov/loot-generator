@@ -9,10 +9,10 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LogoutService implements LogoutHandler {
+public class LogoutServiceImpl implements LogoutHandler {
     private final TokenRepository tokenRepository;
 
-    public LogoutService(TokenRepository tokenRepository) {
+    public LogoutServiceImpl(TokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
 

@@ -10,15 +10,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public interface AuthService {
-    User register(RegisterRequest registerRequest);
+    User register(RegisterRequest registerRequest, HttpServletRequest request);
 
     LoginResponse login(LoginRequest loginRequest, HttpServletRequest request);
 
     LoginResponse googleLogin(String googleToken, HttpServletRequest requestData) throws Exception;
 
-    void forgotPassword(String email);
+    void forgotPassword(String email, HttpServletRequest request);
 
-    void resetPassword(String token, String newPassword);
+    void resetPassword(String token, String newPassword, HttpServletRequest request);
 
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
+
 }

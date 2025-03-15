@@ -4,13 +4,11 @@ import com.dst.lootgenerator.auth.models.DTO.*;
 import com.dst.lootgenerator.auth.models.User;
 import com.dst.lootgenerator.auth.services.AuthService;
 import com.dst.lootgenerator.core.models.SuccessResponse;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +23,16 @@ import java.time.Instant;
 public class AuthController {
 
     private final AuthService authService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, ApplicationEventPublisher eventPublisher) {
         this.authService = authService;
+        this.eventPublisher = eventPublisher;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<SuccessResponse> register(@RequestBody @Valid RegisterRequest registerRequest, UriComponentsBuilder uri) {
-        User registeredUser = authService.register(registerRequest);
+    public ResponseEntity<SuccessResponse> register(@RequestBody @Valid RegisterRequest registerRequest, UriComponentsBuilder uri, HttpServletRequest request) {
+        User registeredUser = authService.register(registerRequest, request);
 
         RegisterResponse registerResponse = new RegisterResponse(
                 registeredUser.getId(),
@@ -82,30 +82,15 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
-        try {
-            authService.forgotPassword(forgotPasswordRequest.getEmail());
-            return ResponseEntity.ok().build(); // Връщаме 200 OK при успешен request.
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); //Връщаме 404 Not Found ако потребителя не е намерен.
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //Връщаме 500 Internal Server Error при други грешки.
-        }
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest, HttpServletRequest request) {
+        authService.forgotPassword(forgotPasswordRequest.getEmail(), request);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
-        try {
-            authService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getNewPassword());
-            return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            if (e.getMessage().equals("Invalid or expired token")) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token"); //400
-            } else if (e.getMessage().equals("Token expired")) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token expired");//400
-            }
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //500
-        }
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest, HttpServletRequest request) {
+        authService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getNewPassword(), request);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/refresh-token")
