@@ -93,9 +93,10 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
 
+        // Spring Security handles exception if user is not found
         User user = userRepository
                 .findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found", HttpStatus.NOT_FOUND, loginRequest.getEmail()));
+                .orElseThrow();
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
