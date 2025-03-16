@@ -26,6 +26,4 @@ public class RegisterRequest {
         this.email = email;
         this.password = password;
     }
-
-
 }
