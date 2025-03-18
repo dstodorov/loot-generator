@@ -59,3 +59,5 @@ logging:
         security: DEBUG
 google:
   client-id: ${GOOGLE_CLIENT_ID}
+server:
+  forward-headers-strategy: native
