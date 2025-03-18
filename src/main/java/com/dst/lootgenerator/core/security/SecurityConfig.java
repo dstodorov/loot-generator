@@ -46,7 +46,11 @@ public class SecurityConfig {
             "/api/auth/reset-password",
             "/api/auth/refresh-token",
             "/api-docs/**",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            "/reset-password",
+            "/update-password",
+            "/password-updated.html",
+            "/password-updated"
     };
     public static String LOGOUT_ENDPOINT = "/api/auth/logout";
     @Bean

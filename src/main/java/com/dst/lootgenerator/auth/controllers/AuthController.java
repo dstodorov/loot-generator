@@ -87,11 +87,11 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest, HttpServletRequest request) {
-        authService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getNewPassword(), request);
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/reset-password")
+//    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest, HttpServletRequest request) {
+//        authService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getNewPassword(), request);
+//        return ResponseEntity.ok().build();
+//    }
 
     @PostMapping("/refresh-token")
     public void refreshToken(
