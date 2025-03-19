@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter
 public class RegisterRequest {
 
-    // Getters and setters
     @NotBlank(message = "Email is required")
     @Email(message = "Email is not valid")
     private String email;
@@ -19,7 +18,6 @@ public class RegisterRequest {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
-    // Конструктор по подразбиране (задължителен за Jackson)
     public RegisterRequest() {}
 
     public RegisterRequest(String email, String password) {
