@@ -49,6 +49,9 @@ function resetPassword() {
                 history.replaceState({}, "Password Reset Successful", window.location.pathname);
             } else {
                 response.text().then(errorMessage => {
+                    document.getElementById('password').value = ""
+                    document.getElementById('confirmPassword').value = ""
+                    resetButton.disabled = true;
                     passwordError.textContent = "Password reset failed!";
                     passwordError.style.display = 'block';
                 });
