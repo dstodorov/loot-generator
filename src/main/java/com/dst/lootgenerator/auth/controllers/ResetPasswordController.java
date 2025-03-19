@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,9 +37,4 @@ public class ResetPasswordController {
         authService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getNewPassword(), request);
         return ResponseEntity.ok(HttpStatus.OK);
     }
-
-//    @GetMapping("/password-updated")
-//    public ModelAndView passwordUpdated() {
-//        return new ModelAndView("forward:/password-updated.html");
-//    }
 }

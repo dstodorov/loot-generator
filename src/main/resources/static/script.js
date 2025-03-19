@@ -49,7 +49,7 @@ function resetPassword() {
                 history.replaceState({}, "Password Reset Successful", window.location.pathname);
             } else {
                 response.text().then(errorMessage => {
-                    passwordError.textContent = errorMessage || "Password reset failed!";
+                    passwordError.textContent = "Password reset failed!";
                     passwordError.style.display = 'block';
                 });
             }
