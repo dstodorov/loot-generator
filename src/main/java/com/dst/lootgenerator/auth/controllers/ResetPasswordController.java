@@ -4,6 +4,7 @@ import com.dst.lootgenerator.auth.models.DTO.ResetPasswordRequest;
 import com.dst.lootgenerator.auth.services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,13 +34,13 @@ public class ResetPasswordController {
     }
 
     @PostMapping("/update-password")
-    public String resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest, HttpServletRequest request) {
+    public ResponseEntity<HttpStatus> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest, HttpServletRequest request) {
         authService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getNewPassword(), request);
-        return "redirect:/password-updated";
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/password-updated")
-    public ModelAndView passwordUpdated() {
-        return new ModelAndView("forward:/password-updated.html");
-    }
+//    @GetMapping("/password-updated")
+//    public ModelAndView passwordUpdated() {
+//        return new ModelAndView("forward:/password-updated.html");
+//    }
 }

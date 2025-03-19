@@ -49,8 +49,8 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/reset-password",
             "/update-password",
-            "/password-updated.html",
-            "/password-updated"
+            "/static/**",
+            "/icon.png"
     };
     public static String LOGOUT_ENDPOINT = "/api/auth/logout";
     @Bean
