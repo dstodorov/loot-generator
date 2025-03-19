@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -49,9 +50,19 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/reset-password",
             "/update-password",
-            "/static/**",
-            "/icon.png"
     };
+
+    private static final String[] staticResources = {
+            "/static/**",
+            "/icon.png",
+            "/style.css",
+            "/script.js",
+    };
+
+    private static final String[] adminEndpoints = {
+            "/api/config/update",
+    };
+
     public static String LOGOUT_ENDPOINT = "/api/auth/logout";
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -59,12 +70,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers(whiteList).permitAll()
-                        .requestMatchers("/api/config/update").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(adminEndpoints).hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(staticResources).permitAll()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Important: Stateless session
-                .authenticationProvider(daoAuthenticationProvider()) // Use your DaoAuthenticationProvider
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter before UsernamePasswordAuthenticationFilter
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(daoAuthenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                         .logoutUrl(LOGOUT_ENDPOINT)
                         .logoutSuccessHandler((request, response, authentication) -> {
@@ -78,7 +90,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() throws Exception {
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);
