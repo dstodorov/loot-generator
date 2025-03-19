@@ -1,5 +1,3 @@
-# HELP.md
-
 ## Backend for Mobile Games
 
 This repository contains a Spring Boot backend designed to support iOS and Android games by providing authentication, security, and other essential services.
