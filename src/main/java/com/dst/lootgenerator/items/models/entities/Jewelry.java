@@ -17,5 +17,6 @@ public class Jewelry extends Item {
     @Enumerated(value = EnumType.STRING)
     private JewelryType type;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "jewelry_attributes")
     private List<Attribute> attributes = new ArrayList<>();
 }

@@ -17,5 +17,6 @@ public class Rune extends Item {
     @Enumerated(value = EnumType.STRING)
     private RuneType type;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "rune_attributes")
     private List<Attribute> attributes = new ArrayList<>();
 }

@@ -17,5 +17,6 @@ public class Charm extends Item {
     @Enumerated(EnumType.STRING)
     private CharmType type;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "charm_attributes")
     private List<Attribute> attributes = new ArrayList<>();
 }

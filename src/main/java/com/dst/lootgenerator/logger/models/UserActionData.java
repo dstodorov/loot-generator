@@ -11,7 +11,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "logs_user_actions")
+@Table(name = "user_actions")
 public class UserActionData implements LogData{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

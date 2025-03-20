@@ -21,5 +21,6 @@ public class Gem extends Item {
     @Enumerated(value = EnumType.STRING)
     private GemType type;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "gem_attributes")
     private List<Attribute> attributes = new ArrayList<>();
 }

@@ -21,5 +21,6 @@ public class Armor extends Item{
     @Enumerated(EnumType.STRING)
     private ArmorType type;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "armor_attributes")
     private List<Attribute> attributes = new ArrayList<>();
 }
