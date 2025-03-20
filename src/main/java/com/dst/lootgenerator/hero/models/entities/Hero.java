@@ -1,11 +1,10 @@
-package com.dst.lootgenerator.hero.models;
+package com.dst.lootgenerator.hero.models.entities;
 
 import com.dst.lootgenerator.core.models.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
