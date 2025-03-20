@@ -27,7 +27,7 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter; // Inject JWT filter
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final LogoutHandler logoutHandler;
 
@@ -42,7 +42,6 @@ public class SecurityConfig {
     private static final String[] whiteList = {
             "/api/auth/register",
             "/api/auth/login",
-            "/api/auth/test",
             "/api/auth/forgot-password",
             "/api/auth/reset-password",
             "/api/auth/refresh-token",

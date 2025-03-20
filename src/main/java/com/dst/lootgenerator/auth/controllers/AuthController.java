@@ -23,11 +23,9 @@ import java.time.Instant;
 public class AuthController {
 
     private final AuthService authService;
-    private final ApplicationEventPublisher eventPublisher;
 
-    public AuthController(AuthService authService, ApplicationEventPublisher eventPublisher) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.eventPublisher = eventPublisher;
     }
 
     @PostMapping("/register")
@@ -64,6 +62,7 @@ public class AuthController {
         return ResponseEntity.ok(successResponse);
     }
 
+    // NOT TESTED, NEED TO BE REFACTORED
     @PostMapping("/google-login")
     public ResponseEntity<SuccessResponse> googleLogin(@RequestBody String googleToken, HttpServletRequest requestData) {
         try {
@@ -86,12 +85,6 @@ public class AuthController {
         authService.forgotPassword(forgotPasswordRequest.getEmail(), request);
         return ResponseEntity.ok().build();
     }
-
-//    @PostMapping("/reset-password")
-//    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest, HttpServletRequest request) {
-//        authService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getNewPassword(), request);
-//        return ResponseEntity.ok().build();
-//    }
 
     @PostMapping("/refresh-token")
     public void refreshToken(
