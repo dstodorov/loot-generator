@@ -87,11 +87,11 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public void refreshToken(
+    public SuccessResponse refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
-        authService.refreshToken(request, response);
+        return authService.refreshToken(request, response);
     }
 
     @GetMapping("/dummySecure")

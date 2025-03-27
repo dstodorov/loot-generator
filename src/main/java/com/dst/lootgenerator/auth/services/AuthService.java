@@ -4,6 +4,7 @@ import com.dst.lootgenerator.auth.models.DTO.LoginRequest;
 import com.dst.lootgenerator.auth.models.DTO.LoginResponse;
 import com.dst.lootgenerator.auth.models.DTO.RegisterRequest;
 import com.dst.lootgenerator.auth.models.User;
+import com.dst.lootgenerator.core.models.SuccessResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -20,6 +21,6 @@ public interface AuthService {
 
     void resetPassword(String token, String newPassword, HttpServletRequest request);
 
-    void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    SuccessResponse refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 }

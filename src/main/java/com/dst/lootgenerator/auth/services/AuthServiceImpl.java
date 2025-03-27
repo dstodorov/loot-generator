@@ -12,6 +12,8 @@ import com.dst.lootgenerator.auth.repositories.UserRepository;
 import com.dst.lootgenerator.core.exceptions.models.ExpiredTokenException;
 import com.dst.lootgenerator.core.exceptions.models.InvalidTokenException;
 import com.dst.lootgenerator.core.exceptions.models.UsernameNotFoundException;
+import com.dst.lootgenerator.core.models.FailureResponse;
+import com.dst.lootgenerator.core.models.SuccessResponse;
 import com.dst.lootgenerator.core.security.JwtService;
 import com.dst.lootgenerator.logger.models.ActionType;
 import com.dst.lootgenerator.logger.models.UserActionData;
@@ -186,16 +188,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void refreshToken(
+    public SuccessResponse refreshToken(
             HttpServletRequest requestData,
             HttpServletResponse response
     ) throws IOException {
         final String authHeader = requestData.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String username;
+        List<String> errors = new ArrayList<>();
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             //throw new RefreshTokenFailureException(ApplicationMessages.REFRESH_TOKEN_FAILURE);
+            errors.add("Invalid or not existing access token");
         }
         refreshToken = authHeader.substring(7);
         username = jwtService.extractUsername(refreshToken);
@@ -209,13 +213,17 @@ public class AuthServiceImpl implements AuthService {
                 revokeAllUserTokens(user);
                 saveUserToken(user, accessToken);
                 LoginResponse loginResponse = new LoginResponse(accessToken, refreshToken);
+                SuccessResponse successResponse = new SuccessResponse(Instant.now(), HttpStatus.OK, loginResponse);
 
                 // Publish async Refresh Token event to write into the database
                 publishEvent(ActionType.TOKEN_REFRESH, user.getEmail(), requestData);
-
-                new ObjectMapper().writeValue(response.getOutputStream(), loginResponse);
+                return successResponse;
+                //new ObjectMapper().writeValue(response.getOutputStream(), successResponse);
             }
         }
+
+        return null;
+        //return new FailureResponse(Instant.now(), "Token refresh failed", HttpStatus.BAD_REQUEST, errors);
     }
 
     private void saveUserToken(User user, String jwtToken) {
