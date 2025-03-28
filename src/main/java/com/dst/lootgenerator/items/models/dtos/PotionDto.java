@@ -5,8 +5,9 @@ import com.dst.lootgenerator.items.models.enums.PotionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PotionDto extends ItemDto {

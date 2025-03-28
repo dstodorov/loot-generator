@@ -4,8 +4,9 @@ import com.dst.lootgenerator.items.models.enums.ValueType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AttributeDto extends ItemDto {

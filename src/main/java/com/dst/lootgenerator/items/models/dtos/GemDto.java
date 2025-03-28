@@ -5,10 +5,11 @@ import com.dst.lootgenerator.items.models.enums.GemType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class GemDto extends ItemDto {
