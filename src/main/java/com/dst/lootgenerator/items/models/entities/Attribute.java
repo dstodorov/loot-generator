@@ -1,9 +1,8 @@
 package com.dst.lootgenerator.items.models.entities;
 
 import com.dst.lootgenerator.core.models.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.dst.lootgenerator.items.models.enums.ValueType;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,9 +13,9 @@ import lombok.EqualsAndHashCode;
 public class Attribute extends BaseEntity {
     @Column(nullable = false)
     private String name;
-    @Column(name = "value_type", nullable = false)
-    private Integer valueType;
+    @Enumerated(EnumType.STRING)
+    private ValueType valueType;
     @Column(nullable = false)
-    private String value;
+    private float value;
     private String description;
 }

@@ -19,7 +19,7 @@ public class Skill extends BaseEntity {
     private String description;
     private String iconUrl;
     @Enumerated(EnumType.STRING)
-    private SchoolType school;
+    private SchoolType schoolType;
     private boolean offensive;
     @Enumerated(EnumType.STRING)
     private SkillActivation activation;
