@@ -1,6 +1,6 @@
 package com.dst.lootgenerator.hero.models.enums;
 
-public enum Hero {
+public enum HeroClass {
     WIZARD,
     WARRIOR,
     ROUGE

@@ -1,5 +1,6 @@
 package com.dst.lootgenerator.items.models.entities;
 
+import com.dst.lootgenerator.items.models.enums.ItemRarity;
 import com.dst.lootgenerator.items.models.enums.JewelryType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -16,6 +17,9 @@ public class Jewelry extends Item {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private JewelryType type;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ItemRarity rarity;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "jewelry_attributes")
     private List<Attribute> attributes = new ArrayList<>();
