@@ -5,58 +5,62 @@ import com.dst.lootgenerator.items.models.entities.Armor;
 import com.dst.lootgenerator.items.models.entities.Jewelry;
 import com.dst.lootgenerator.items.models.entities.Offhand;
 import com.dst.lootgenerator.items.models.entities.Weapon;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
+@NoArgsConstructor
 @Entity
 @Table(name = "equipments")
 public class Equipment extends BaseEntity {
-    @OneToOne
-    @JoinColumn(name = "hero_id")
-    private Hero hero;
-    @OneToOne
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+//    @OneToOne
+//    @JoinColumn(name = "hero_id")
+//    private Hero hero;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "one_handed_weapon_id")
     private Weapon oneHandedWeapon;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "two_handed_weapon_id")
     private Weapon twoHandedWeapon;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "body_armor_id")
     private Armor bodyArmor;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "helmet_id")
     private Armor helmet;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "shield_id")
     private Armor shield;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "offhand_id")
     private Offhand offhand;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "gloves_id")
     private Armor gloves;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "boots_id")
     private Armor boots;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "ring_one_id")
     private Jewelry ringOne;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "ring_two_id")
     private Jewelry ringTwo;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "amulet_id")
     private Jewelry amulet;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "bracelet_id")
     private Jewelry bracelet;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "necklace_id")
     private Jewelry necklace;
 }

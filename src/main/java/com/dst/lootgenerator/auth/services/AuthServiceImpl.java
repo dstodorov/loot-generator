@@ -12,13 +12,11 @@ import com.dst.lootgenerator.auth.repositories.UserRepository;
 import com.dst.lootgenerator.core.exceptions.models.ExpiredTokenException;
 import com.dst.lootgenerator.core.exceptions.models.InvalidTokenException;
 import com.dst.lootgenerator.core.exceptions.models.UsernameNotFoundException;
-import com.dst.lootgenerator.core.models.FailureResponse;
 import com.dst.lootgenerator.core.models.SuccessResponse;
 import com.dst.lootgenerator.core.security.JwtService;
 import com.dst.lootgenerator.logger.models.ActionType;
 import com.dst.lootgenerator.logger.models.UserActionData;
 import com.dst.lootgenerator.logger.models.UserActionLog;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,6 +83,12 @@ public class AuthServiceImpl implements AuthService {
 
         return userRepository.save(user);
     }
+
+    @Override
+    public User saveUserData(User user) {
+        return this.userRepository.save(user);
+    }
+
 
     @Override
     public LoginResponse login(LoginRequest loginRequest, HttpServletRequest requestData) {
@@ -252,8 +256,8 @@ public class AuthServiceImpl implements AuthService {
                 .user(user)
                 .action(actionType)
                 .timestamp(Instant.now())
-                .ipAddress(requestData.getRemoteAddr())
-                .deviceType(requestData.getHeader("User-Agent"))
+                .ipAddress(requestData != null ? requestData.getRemoteAddr() : "N/A")
+                .deviceType(requestData != null ? requestData.getHeader("User-Agent") : "N/A")
                 .build();
 
         eventPublisher.publishEvent(new UserActionLog(this, userActionData));

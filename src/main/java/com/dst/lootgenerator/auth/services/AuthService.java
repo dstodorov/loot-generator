@@ -13,6 +13,8 @@ import java.io.IOException;
 public interface AuthService {
     User register(RegisterRequest registerRequest, HttpServletRequest request);
 
+    User saveUserData(User user);
+
     LoginResponse login(LoginRequest loginRequest, HttpServletRequest request);
 
     LoginResponse googleLogin(String googleToken, HttpServletRequest requestData) throws Exception;

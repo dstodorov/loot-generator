@@ -3,14 +3,17 @@ package com.dst.lootgenerator.items.models.entities;
 import com.dst.lootgenerator.items.models.enums.ArmorType;
 import com.dst.lootgenerator.items.models.enums.ItemRarity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "armors")
 public class Armor extends Item{
@@ -20,7 +23,7 @@ public class Armor extends Item{
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ArmorType type;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "armor_attributes")
     private List<Attribute> attributes = new ArrayList<>();
 }

@@ -4,6 +4,7 @@ import com.dst.lootgenerator.items.models.dtos.ArmorDto;
 import com.dst.lootgenerator.items.models.dtos.JewelryDto;
 import com.dst.lootgenerator.items.models.dtos.OffhandDto;
 import com.dst.lootgenerator.items.models.dtos.WeaponDto;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class EquipmentDto {
     private Long id;
     private WeaponDto oneHandedWeapon;

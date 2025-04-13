@@ -16,7 +16,6 @@ public class EffectDto {
     private StatusEffect statusEffect;
     private Effect effectType;
     private String description;
-    private Integer damage;
     private Integer heal;
     private Integer damagePerTurn;
     private BuffDto buff;

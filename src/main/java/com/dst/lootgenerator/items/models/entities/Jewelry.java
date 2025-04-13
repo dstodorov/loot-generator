@@ -5,12 +5,16 @@ import com.dst.lootgenerator.items.models.enums.JewelryType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
+@NoArgsConstructor
 @Entity
 @Table(name = "jewelry")
 public class Jewelry extends Item {
@@ -20,7 +24,7 @@ public class Jewelry extends Item {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ItemRarity rarity;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "jewelry_attributes")
     private List<Attribute> attributes = new ArrayList<>();
 }

@@ -2,14 +2,20 @@ package com.dst.lootgenerator.items.models.entities;
 
 import com.dst.lootgenerator.core.models.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@SuperBuilder
+@Inheritance(strategy = InheritanceType.JOINED)
+@NoArgsConstructor
+@Getter
 public abstract class Item extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private int level = 1;
 }

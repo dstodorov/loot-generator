@@ -4,14 +4,17 @@ import com.dst.lootgenerator.items.models.enums.ItemRarity;
 import com.dst.lootgenerator.items.models.enums.WeaponCategory;
 import com.dst.lootgenerator.items.models.enums.WeaponType;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @Entity
 @Table(name = "weapons")
 public class Weapon extends Item {
@@ -24,7 +27,7 @@ public class Weapon extends Item {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private WeaponType type;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "weapon_attributes")
     private List<Attribute> attributes = new ArrayList<>();
 }

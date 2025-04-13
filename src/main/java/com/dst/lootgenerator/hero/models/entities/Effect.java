@@ -6,12 +6,19 @@ import com.dst.lootgenerator.hero.models.enums.StatusEffect;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
+@NoArgsConstructor
 @Entity
 @Table(name = "status_effects")
 public class Effect extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Enumerated(EnumType.STRING)
     private StatusEffect statusEffect;
     @Enumerated(EnumType.STRING)
@@ -19,6 +26,6 @@ public class Effect extends BaseEntity {
     private String description;
     private int damagePerTurn;
     private int heal;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Buff buff;
 }
