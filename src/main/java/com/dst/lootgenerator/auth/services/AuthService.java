@@ -25,4 +25,5 @@ public interface AuthService {
 
     SuccessResponse refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
+    User getLoggedInUser();
 }

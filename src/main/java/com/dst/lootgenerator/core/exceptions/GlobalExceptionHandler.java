@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -83,7 +84,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<FailureResponse> handleInvalidTokenException(InvalidTokenException exception, Locale locale,  HttpServletRequest request) {
+    public ResponseEntity<FailureResponse> handleInvalidTokenException(InvalidTokenException exception, Locale locale, HttpServletRequest request) {
 
         publishEvent(exception, request);
 
@@ -91,11 +92,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ExpiredTokenException.class)
-    public ResponseEntity<FailureResponse> handleExpiredTokenException(ExpiredTokenException exception, Locale locale,  HttpServletRequest request) {
+    public ResponseEntity<FailureResponse> handleExpiredTokenException(ExpiredTokenException exception, Locale locale, HttpServletRequest request) {
 
         publishEvent(exception, request);
 
         return createFailureResponse(getMessage("exceptions.expired-token.message", locale), HttpStatus.UNAUTHORIZED, List.of(exception.getMessage()));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<FailureResponse> handleAccessDeniedException(AccessDeniedException exception, Locale locale, HttpServletRequest request) {
+        publishEvent(exception, request);
+        return createFailureResponse(getMessage("exceptions.access-denied.message", locale), HttpStatus.FORBIDDEN, List.of(exception.getMessage()));
     }
 
     @Override

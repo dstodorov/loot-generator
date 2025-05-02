@@ -219,7 +219,7 @@ public class AuthServiceImpl implements AuthService {
                 LoginResponse loginResponse = new LoginResponse(accessToken, refreshToken);
                 SuccessResponse successResponse = new SuccessResponse(Instant.now(), HttpStatus.OK, loginResponse);
 
-                // Publish async Refresh Token event to write into the database
+                // Publish an async Refresh Token event to write into the database
                 publishEvent(ActionType.TOKEN_REFRESH, user.getEmail(), requestData);
                 return successResponse;
                 //new ObjectMapper().writeValue(response.getOutputStream(), successResponse);
@@ -228,6 +228,18 @@ public class AuthServiceImpl implements AuthService {
 
         return null;
         //return new FailureResponse(Instant.now(), "Token refresh failed", HttpStatus.BAD_REQUEST, errors);
+    }
+
+    @Override
+    public User getLoggedInUser() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+
+        Optional<User> userByEmail = this.userRepository.findByEmail(username);
+
+        return userByEmail.orElse(null);
     }
 
     private void saveUserToken(User user, String jwtToken) {

@@ -1,12 +1,18 @@
 package com.dst.lootgenerator.hero.services;
 
+import com.dst.lootgenerator.auth.models.User;
+import com.dst.lootgenerator.auth.services.AuthService;
 import com.dst.lootgenerator.hero.models.dtos.*;
 import com.dst.lootgenerator.hero.models.entities.*;
 import com.dst.lootgenerator.hero.repositories.HeroRepository;
 import com.dst.lootgenerator.items.models.dtos.*;
 import com.dst.lootgenerator.items.models.entities.*;
 import com.dst.lootgenerator.items.models.enums.*;
+import com.dst.lootgenerator.items.services.ItemService;
+import com.dst.lootgenerator.player.models.dtos.PlayerHeroDto;
+import com.dst.lootgenerator.player.services.PlayerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,13 +23,24 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HeroService {
     private final HeroRepository heroRepository;
+    private final AuthService authService;
 
     public Hero saveHero(Hero hero) {
         return this.heroRepository.save(hero);
     }
 
-    public HeroResponse getHeroById(Long id) {
-        Hero hero = this.heroRepository.findById(id).orElse(null);
+    public HeroResponse getHeroById(Long heroId) {
+        User loggedInUser = authService.getLoggedInUser();
+
+        loggedInUser
+                .getHeroes()
+                .stream()
+                .mapToLong(Hero::getId)
+                .filter(value -> value == heroId)
+                .findAny()
+                .orElseThrow(() -> new AccessDeniedException("You do not have access to this hero"));
+
+        Hero hero = this.heroRepository.findById(heroId).orElse(null);
 
         return hero != null ? mapHeroEntityToHeroResponse(hero) : null;
 

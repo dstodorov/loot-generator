@@ -40,7 +40,7 @@ public class User {
     private String resetPasswordToken;
     @Column(name = "reset_password_token_expiry_date")
     private Date resetPasswordTokenExpiryDate;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "player_heroes")
     private List<Hero> heroes = new ArrayList<>();
     @OneToOne

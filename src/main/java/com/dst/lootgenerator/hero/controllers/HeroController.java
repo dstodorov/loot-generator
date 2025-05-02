@@ -5,7 +5,6 @@ import com.dst.lootgenerator.hero.models.dtos.HeroResponse;
 import com.dst.lootgenerator.hero.services.HeroService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +20,9 @@ public class HeroController {
 
     private final HeroService heroService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SuccessResponse> getHero(@PathVariable Long id) {
-        HeroResponse heroDetails = heroService.getHeroById(id);
+    @GetMapping("/{heroId}")
+    public ResponseEntity<SuccessResponse> getHero(@PathVariable Long heroId) {
+        HeroResponse heroDetails = heroService.getHeroById(heroId);
         return heroDetails != null ? ResponseEntity.ok(new SuccessResponse(
                 Instant.now(), HttpStatus.OK,
                 heroDetails
