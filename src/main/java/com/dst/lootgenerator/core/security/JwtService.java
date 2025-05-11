@@ -45,6 +45,7 @@ public class JwtService {
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         jwtExpiration = this.gameConfigService.getGameConfig().getAccessTokenExpireDuration();
+        extraClaims.put("type", "access");
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
@@ -52,7 +53,9 @@ public class JwtService {
             UserDetails userDetails
     ) {
         refreshExpiration = this.gameConfigService.getGameConfig().getRefreshTokenExpireDuration();
-        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("type", "refresh");
+        return buildToken(claims, userDetails, refreshExpiration);
     }
 
     private String buildToken(
