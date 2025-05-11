@@ -6,5 +6,5 @@ import java.util.List;
 
 
 public interface PlayerService {
-    List<PlayerHeroDto> getPlayerHeroesBaseInfo(Long id);
+    List<PlayerHeroDto> getPlayerHeroesBaseInfo();
 }

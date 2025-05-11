@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,9 +19,9 @@ import java.util.List;
 public class PlayerController {
     private final PlayerService playerService;
 
-    @GetMapping("/{playerId}/heroes")
-    public ResponseEntity<SuccessResponse> getHeroes(@PathVariable Long playerId) {
-        List<PlayerHeroDto> playerHeroesBaseInfo = this.playerService.getPlayerHeroesBaseInfo(playerId);
+    @GetMapping("/heroes")
+    public ResponseEntity<SuccessResponse> getHeroes() {
+        List<PlayerHeroDto> playerHeroesBaseInfo = this.playerService.getPlayerHeroesBaseInfo();
         return ResponseEntity.ok(new SuccessResponse(
                 Instant.now(),
                 HttpStatus.ACCEPTED,

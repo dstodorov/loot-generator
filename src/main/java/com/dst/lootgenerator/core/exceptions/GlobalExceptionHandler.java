@@ -1,6 +1,7 @@
 package com.dst.lootgenerator.core.exceptions;
 
 import com.dst.lootgenerator.core.exceptions.models.ExpiredTokenException;
+import com.dst.lootgenerator.core.exceptions.models.HeroesNotFoundException;
 import com.dst.lootgenerator.core.exceptions.models.InvalidTokenException;
 import com.dst.lootgenerator.core.exceptions.models.UsernameNotFoundException;
 import com.dst.lootgenerator.core.models.FailureResponse;
@@ -103,6 +104,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<FailureResponse> handleAccessDeniedException(AccessDeniedException exception, Locale locale, HttpServletRequest request) {
         publishEvent(exception, request);
         return createFailureResponse(getMessage("exceptions.access-denied.message", locale), HttpStatus.FORBIDDEN, List.of(exception.getMessage()));
+    }
+
+    @ExceptionHandler(HeroesNotFoundException.class)
+    public ResponseEntity<FailureResponse> handleHeroesNotFoundException(HeroesNotFoundException exception, Locale locale, HttpServletRequest request) {
+        publishEvent(exception, request);
+        return createFailureResponse(getMessage("exceptions.heroes-not-found.message", locale), HttpStatus.NOT_FOUND, List.of(exception.getMessage()));
     }
 
     @Override
