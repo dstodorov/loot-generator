@@ -16,17 +16,12 @@ import java.util.List;
 public class PlayerServiceImpl implements PlayerService {
     private final UserRepository userRepository;
     private final AuthService authService;
+
     @Override
     public List<PlayerHeroDto> getPlayerHeroesBaseInfo() {
 
         User loggedInUser = authService.getLoggedInUser();
 
-        List<PlayerHeroDto> playerHeroesBaseInfo = this.userRepository.findPlayerHeroesBaseInfo(loggedInUser.getId());
-
-        if(playerHeroesBaseInfo.isEmpty()){
-            throw new HeroesNotFoundException("Player does not have any heroes", HttpStatus.NOT_FOUND);
-        }
-
-        return playerHeroesBaseInfo;
+        return this.userRepository.findPlayerHeroesBaseInfo(loggedInUser.getId());
     }
 }

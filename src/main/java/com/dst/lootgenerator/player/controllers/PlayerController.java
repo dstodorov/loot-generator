@@ -25,7 +25,7 @@ public class PlayerController {
         return ResponseEntity.ok(new SuccessResponse(
                 Instant.now(),
                 HttpStatus.ACCEPTED,
-                !playerHeroesBaseInfo.isEmpty() ? playerHeroesBaseInfo : "Player does not have any heroes")
-        );
+                playerHeroesBaseInfo
+        ));
     }
 }

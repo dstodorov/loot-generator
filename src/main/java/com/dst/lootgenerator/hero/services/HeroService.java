@@ -2,16 +2,15 @@ package com.dst.lootgenerator.hero.services;
 
 import com.dst.lootgenerator.auth.models.User;
 import com.dst.lootgenerator.auth.services.AuthService;
+import com.dst.lootgenerator.core.exceptions.models.HeroesNotFoundException;
 import com.dst.lootgenerator.hero.models.dtos.*;
 import com.dst.lootgenerator.hero.models.entities.*;
 import com.dst.lootgenerator.hero.repositories.HeroRepository;
 import com.dst.lootgenerator.items.models.dtos.*;
 import com.dst.lootgenerator.items.models.entities.*;
 import com.dst.lootgenerator.items.models.enums.*;
-import com.dst.lootgenerator.items.services.ItemService;
-import com.dst.lootgenerator.player.models.dtos.PlayerHeroDto;
-import com.dst.lootgenerator.player.services.PlayerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +31,11 @@ public class HeroService {
     public HeroResponse getHeroById(Long heroId) {
         User loggedInUser = authService.getLoggedInUser();
 
+
+        Hero hero = this.heroRepository
+                .findById(heroId)
+                .orElseThrow(() -> new HeroesNotFoundException(String.format("Hero with id %d was not found!", heroId), HttpStatus.NOT_FOUND));
+
         loggedInUser
                 .getHeroes()
                 .stream()
@@ -40,10 +44,8 @@ public class HeroService {
                 .findAny()
                 .orElseThrow(() -> new AccessDeniedException("You do not have access to this hero"));
 
-        Hero hero = this.heroRepository.findById(heroId).orElse(null);
 
-        return hero != null ? mapHeroEntityToHeroResponse(hero) : null;
-
+        return mapHeroEntityToHeroResponse(hero);
     }
 
     private HeroResponse mapHeroEntityToHeroResponse(Hero hero) {
