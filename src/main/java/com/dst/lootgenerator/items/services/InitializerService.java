@@ -255,6 +255,8 @@ public class InitializerService {
                 stats
         );
 
+        // Create a test player and assign Silvershaper hero to him
+
         RegisterRequest registerRequest = new RegisterRequest("test_user@example.com", "testPassword123");
         User savedUser = authService.register(registerRequest, null);
         savedUser.setHeroes(List.of(silvershaper));
