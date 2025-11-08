@@ -1,7 +1,5 @@
 package com.dst.lootgenerator.core.initializers;
 
-import com.dst.lootgenerator.items.services.AttributeService;
-import com.dst.lootgenerator.items.services.InitializerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;

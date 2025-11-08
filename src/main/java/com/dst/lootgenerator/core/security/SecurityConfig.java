@@ -49,6 +49,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/reset-password",
             "/update-password",
+            "/daily-motivation",
     };
 
     private static final String[] staticResources = {

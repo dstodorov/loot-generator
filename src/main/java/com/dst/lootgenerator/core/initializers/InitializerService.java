@@ -1,4 +1,4 @@
-package com.dst.lootgenerator.items.services;
+package com.dst.lootgenerator.core.initializers;
 
 import com.dst.lootgenerator.auth.models.DTO.RegisterRequest;
 import com.dst.lootgenerator.auth.models.User;
@@ -8,6 +8,7 @@ import com.dst.lootgenerator.hero.models.enums.*;
 import com.dst.lootgenerator.hero.services.HeroService;
 import com.dst.lootgenerator.items.models.entities.*;
 import com.dst.lootgenerator.items.models.enums.*;
+import com.dst.lootgenerator.items.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Daily Motivation</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* calm deep blue gradient */
+            color: #f4f4f4;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 50px 60px;
+            max-width: 800px;
+            text-align: left;
+            animation: fadeIn 1.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quote {
+            font-size: 2rem;
+            line-height: 1.5;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .author {
+            text-align: right;
+            font-weight: 600;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: #ffb347; /* warm amber tone for author */
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            transition: all 0.4s ease;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 25px;
+            }
+            .quote {
+                font-size: 1.5rem;
+            }
+            .author {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <p class="quote" th:text="${quote}">Default quote here</p>
+    <p class="author" th:text="${author}">— Default Author</p>
+</div>
+</body>
+</html>
