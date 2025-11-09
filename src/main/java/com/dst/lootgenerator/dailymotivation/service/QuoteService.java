@@ -21,4 +21,8 @@ public class QuoteService {
     public Quote getRandomQuote() {
         return quoteRepository.findAll().get((int) (Math.random() * quoteRepository.findAll().size()));
     }
+
+    public Quote add(Quote quote) {
+        return this.quoteRepository.save(quote);
+    }
 }

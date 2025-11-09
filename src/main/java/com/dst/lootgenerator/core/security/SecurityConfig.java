@@ -4,6 +4,7 @@ import com.dst.lootgenerator.auth.models.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -69,6 +70,8 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
+                        .requestMatchers(HttpMethod.GET, "/api/quote").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/quote").authenticated()
                         .requestMatchers(whiteList).permitAll()
                         .requestMatchers(adminEndpoints).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(staticResources).permitAll()
